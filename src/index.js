@@ -1,4 +1,5 @@
 import React, { Children } from 'react';
+import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
 import './index.css';
 
@@ -6,13 +7,31 @@ let boardSize = 20;
 let winner = null;
 let winArray = new Array(5);
 
+const customStyles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)'
+  },
+  content: {
+    top: '10%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    backgroundColor: 'silver'
+  }
+};
+
+Modal.setAppElement(document.getElementById('root'));
+
 class Game extends React.Component {
   render() {
     return (
       <div className="game">
-        <div className="game-board">
-          <Board />
-        </div>
+        <Board className="caro-board" />
       </div>
     );
   }
@@ -41,6 +60,7 @@ class Board extends React.Component {
     super(props);
     this.state = {
       xIsNext: true,
+      isModalOpen: false,
       valueArray: Array(boardSize)
         .fill()
         .map(row => new Array(boardSize)
@@ -66,12 +86,13 @@ class Board extends React.Component {
       for (let i = 0; i < 5; i++) {
         this.state.colorArray[winArray[i].row][winArray[i].col] = "darkkhaki";
       }
+      this.state.isModalOpen = true;
     }
 
     this.setState(this.state);
   }
 
-  renderElement(row, col) {
+  renderElement = (row, col) => {
     return (
       <Element
         value={this.state.valueArray[row][col]}
@@ -101,10 +122,44 @@ class Board extends React.Component {
     return board;
   }
 
+  afterOpenModal = () => {
+
+  }
+
+  closeModal = () => {
+    this.setState({
+      isModalOpen: false,
+    })
+  }
+
   render() {
     return (
-      <div>
+      <div className={this.props.className}>
         {this.renderBoard()}
+
+        <Modal
+          isOpen={this.state.isModalOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="winner-modal-dialog">
+
+          <div>
+            The winner is: &nbsp;
+            <span style={{
+              fontSize: 30,
+              fontWeight: "bold",
+              color: (winner === 'X') ? "dodgerblue" : "red"
+            }}>
+              {winner}
+            </span>
+          </div>
+          <br />
+
+          <button onClick={this.closeModal}>
+            Close
+          </button>
+        </Modal>
       </div>
     );
   }
