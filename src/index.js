@@ -79,8 +79,7 @@ class Board extends React.Component {
     const newArray = this.state.valueArray.slice();
     newArray[row][col] = this.state.xIsNext ? 'X' : 'O';
 
-    this.state.valueArray = newArray;
-    this.state.xIsNext = !this.state.xIsNext;
+
 
     if (isWin(newArray, row, col)) {
       for (let i = 0; i < 5; i++) {
@@ -89,6 +88,12 @@ class Board extends React.Component {
       this.state.isModalOpen = true;
     }
 
+    this.state.valueArray = newArray;
+
+    if (winner === null) {
+      this.state.xIsNext = !this.state.xIsNext;
+    }
+    
     this.setState(this.state);
   }
 
@@ -135,6 +140,23 @@ class Board extends React.Component {
   render() {
     return (
       <div className={this.props.className}>
+        <div className="game-turn">
+          <span style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            color: (this.state.xIsNext === true) ? "dodgerblue" : "red"
+          }}>
+            {(this.state.xIsNext === true) ? "X" : "O"}
+          </span>
+          <span style={{
+            fontSize: 30,
+            color: "white"
+          }}>
+            &nbsp;turn
+          </span>
+        </div>
+
+        <br />
         {this.renderBoard()}
 
         <Modal
