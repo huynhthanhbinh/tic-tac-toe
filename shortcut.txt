@@ -1,0 +1,5 @@
+1653006 Huynh Thanh Binh
+
+1. Format Code: Alt + Shift + F / Ctrl + K + F
+2. Rename: F2
+3. Show/hide terminal: Ctrl + J
