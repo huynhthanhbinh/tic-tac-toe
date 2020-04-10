@@ -1,11 +1,11 @@
-import React, { Children } from 'react';
+import React, { Component } from 'react';
 import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
+import * as algorithm from './algorithm';
 import './index.css';
 
-let boardSize = 20;
-let winner = null;
-let winArray = new Array(5);
+const boardSize = algorithm.boardSize;
+const winArray = algorithm.winArray;
 
 const customStyles = {
   overlay: {
@@ -27,7 +27,7 @@ const customStyles = {
 
 Modal.setAppElement(document.getElementById('root'));
 
-class Game extends React.Component {
+class Game extends Component {
   render() {
     return (
       <div className="game">
@@ -37,7 +37,7 @@ class Game extends React.Component {
   }
 }
 
-class Element extends React.Component {
+class Element extends Component {
   render() {
     return (
       <button className="square"
@@ -55,7 +55,7 @@ class Element extends React.Component {
   }
 }
 
-class Board extends React.Component {
+class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -73,7 +73,7 @@ class Board extends React.Component {
   }
 
   onClickElement(row, col) {
-    if (this.state.valueArray[row][col] != null || winner != null) {
+    if (this.state.valueArray[row][col] != null || algorithm.getWinner() != null) {
       return;
     }
     const newArray = this.state.valueArray.slice();
@@ -81,7 +81,7 @@ class Board extends React.Component {
 
 
 
-    if (isWin(newArray, row, col)) {
+    if (algorithm.isWin(newArray, row, col)) {
       for (let i = 0; i < 5; i++) {
         this.state.colorArray[winArray[i].row][winArray[i].col] = "darkkhaki";
       }
@@ -90,7 +90,7 @@ class Board extends React.Component {
 
     this.state.valueArray = newArray;
 
-    if (winner === null) {
+    if (algorithm.getWinner() === null) {
       this.state.xIsNext = !this.state.xIsNext;
     }
     
@@ -171,9 +171,9 @@ class Board extends React.Component {
             <span style={{
               fontSize: 30,
               fontWeight: "bold",
-              color: (winner === 'X') ? "dodgerblue" : "red"
+              color: (algorithm.getWinner() === 'X') ? "dodgerblue" : "red"
             }}>
-              {winner}
+              {algorithm.getWinner()}
             </span>
           </div>
           <br />
@@ -185,155 +185,6 @@ class Board extends React.Component {
       </div>
     );
   }
-}
-
-function isWin(array2D, row, col) {
-  let value = array2D[row][col];
-  let array;
-  let index;
-
-  array = getVerticalArray(array2D, row, col);
-  index = getArrayWinFirstElementIndex(array, value);
-  if (index !== -1) {
-    for (let i = 0; i < 5; i++) {
-      winArray[i] = array[index + i];
-    }
-
-    winner = value;
-    return true;
-  }
-
-  array = getHorizontalArray(array2D, row, col);
-  index = getArrayWinFirstElementIndex(array, value);
-  if (index !== -1) {
-    for (let i = 0; i < 5; i++) {
-      winArray[i] = array[index + i];
-    }
-
-    winner = value;
-    return true;
-  }
-
-  array = getLeftDiagonalArray(array2D, row, col);
-  index = getArrayWinFirstElementIndex(array, value);
-  if (index !== -1) {
-    for (let i = 0; i < 5; i++) {
-      winArray[i] = array[index + i];
-    }
-
-    winner = value;
-    return true;
-  }
-
-  array = getRightDiagonalArray(array2D, row, col);
-  index = getArrayWinFirstElementIndex(array, value);
-  if (index !== -1) {
-    for (let i = 0; i < 5; i++) {
-      winArray[i] = array[index + i];
-    }
-
-    winner = value;
-    return true;
-  }
-
-  return false;
-}
-
-// 0 1 2 3 <4> 5 6 7 8 
-// X X X X X || O O O O O
-function getArrayWinFirstElementIndex(array, value) {
-  if (array.length >= 5) {
-    for (let i = 0; i <= array.length - 5; i++) {
-      let count = 0;
-      for (let j = i; j < i + 5; j++) {
-        if (array[j].val === value) {
-          count++;
-          if (count === 5) {
-            return i;
-          }
-        } else {
-          break;
-        }
-      }
-    }
-  }
-  return -1;
-}
-
-function getVerticalArray(array2D, row, col) { // column
-  let array = [];
-  for (let i = ((row - 4 > 0) ? (row - 4) : 0); i <= ((row + 4 < boardSize - 1) ? (row + 4) : boardSize - 1); i++) {
-    array.push({ val: array2D[i][col], row: i, col: col });
-  }
-  return array;
-}
-
-function getHorizontalArray(array2D, row, col) { // row
-  let array = [];
-  for (let i = ((col - 4 > 0) ? (col - 4) : 0); i <= ((col + 4 < boardSize - 1) ? (col + 4) : boardSize - 1); i++) {
-    array.push({ val: array2D[row][i], row: row, col: i });
-  }
-  return array;
-}
-
-function getLeftDiagonalArray(array2D, row, col) { // topLeft --> bottomRight
-  let array = [];
-  let startRow;
-  let startCol;
-  let deltaBackward;
-  let nElement;
-
-  for (let i = 4; i >= 0; i--) {
-    if (row - i >= 0 && col - i >= 0) {
-      deltaBackward = i;
-      startRow = row - i;
-      startCol = col - i;
-      break;
-    }
-  }
-
-  for (let i = 4; i >= 0; i--) {
-    if (row + i <= boardSize - 1 && col + i <= boardSize - 1) {
-      nElement = deltaBackward + 1 + i;
-      break;
-    }
-  }
-
-  for (let i = 0; i < nElement; i++) {
-    array.push({ val: array2D[startRow + i][startCol + i], row: startRow + i, col: startCol + i });
-  }
-
-  return array;
-}
-
-function getRightDiagonalArray(array2D, row, col) { // topRight --> bottomLeft
-  let array = [];
-  let startRow;
-  let startCol;
-  let deltaBackward;
-  let nElement;
-
-  for (let i = 4; i >= 0; i--) {
-    if (row - i >= 0 && col + i <= boardSize - 1) {
-      deltaBackward = i;
-      startRow = row - i;
-      startCol = col + i;
-      break;
-    }
-  }
-
-  for (let i = 4; i >= 0; i--) {
-    if (row + i <= boardSize - 1 && col - i >= 0) {
-      nElement = deltaBackward + 1 + i;
-      break;
-    }
-  }
-
-  for (let i = 0; i < nElement; i++) {
-    array.push({ val: array2D[startRow + i][startCol - i], row: startRow + i, col: startCol - i });
-  }
-
-  return array;
 }
 
 ReactDOM.render(
