@@ -31,13 +31,13 @@ class GameStatus extends Component {
 
   increaseXScrore = () => {
     this.setState({
-      xScore: this.state.xScore++,
+      xScore: this.state.xScore + 1,
     });
   };
 
   increaseOScrore = () => {
     this.setState({
-      oScore: this.state.oScore++,
+      oScore: this.state.oScore + 1,
     });
   };
 }

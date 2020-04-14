@@ -15,13 +15,21 @@ class Game extends Component {
   render = () => {
     return (
       <div className="game">
-        <GameStatus ref={this.gameStatus} />
-        <GameBoard
-          onWin={() => this.gameModal.current.show()}
-          setIsXNext={(xIsNext) => this.gameStatus.current.setXIsNext(xIsNext)}
-        />
-        <GameInfo />
-        <GameModal ref={this.gameModal} />
+        <div className="game-main">
+          <GameStatus ref={this.gameStatus} />
+          <GameBoard
+            onWin={() => this.gameModal.current.show()}
+            setIsXNext={(xIsNext) =>
+              this.gameStatus.current.setXIsNext(xIsNext)
+            }
+          />
+          <GameInfo />
+          <GameModal ref={this.gameModal} />
+        </div>
+        <div class="game-vr"></div>
+        <div className="game-sub">
+          
+        </div>
       </div>
     );
   };

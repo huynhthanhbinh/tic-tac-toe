@@ -1,0 +1,24 @@
+.game {
+  display: inline-flex;
+  min-width: 680px;
+}
+
+.game-main {
+  display: inline-block;
+  width: 660px;
+  min-width: 660px;
+}
+
+.game-vr {
+  display: inline-block;
+  margin-left: 20px;
+  border-left: 1px solid dimgray;
+  height: inherit;
+}
+
+.game-sub {
+  display: inline-block;
+  margin-left: 20px;
+  width: 300px;
+  height: inherit;
+}

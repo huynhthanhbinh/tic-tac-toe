@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Element from "./element";
 
-import * as gameTurn from "./game-status";
 import * as algorithm from "./algorithm";
 
 import "./game-board.css";
@@ -70,8 +69,8 @@ class GameBoard extends Component {
   renderBoard = () => {
     const board = [];
     let array2D = new Array(boardSize)
-      .fill(null)
-      .map((row) => new Array(boardSize).fill(""));
+      .fill()
+      .map(() => new Array(boardSize).fill(""));
 
     for (let row = 0; row < boardSize; row++) {
       for (let col = 0; col < boardSize; col++) {
