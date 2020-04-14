@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
-import Board from './board';
-import './game.css';
+import React from "react";
+import Board from "./board";
+import "./game.css";
 
-class Game extends Component {
-  render() {
-    return (
-      <div className="game">
-        <Board className="caro-board" />
-      </div>
-    );
-  }
-}
+const Game = () => {
+  return (
+    <div className="game">
+      <Board className="caro-board" />
+    </div>
+  );
+};
 
 export default Game;

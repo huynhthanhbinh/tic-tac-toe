@@ -1,26 +1,28 @@
 import React, { Component } from "react";
 import Element from "./element";
-import Modal from "react-modal";
+import GameInfo from "./game-info";
+import GameTurn from "./game-turn";
+import GameModal from "./game-modal";
+
+import * as gameTurn from "./game-turn";
 import * as algorithm from "./algorithm";
-import "./board.css";
 
 const boardSize = algorithm.boardSize;
 const winArray = algorithm.winArray;
 
-Modal.setAppElement(document.getElementById("root"));
-
 class Board extends Component {
   constructor(props) {
     super(props);
+    this.gameModal = React.createRef();
+
     this.state = {
       xIsNext: true,
-      isModalOpen: false,
       valueArray: Array(boardSize)
         .fill()
-        .map((row) => new Array(boardSize).fill(null)),
+        .map(() => new Array(boardSize).fill(null)),
       colorArray: Array(boardSize)
         .fill()
-        .map((row) => new Array(boardSize).fill("black")),
+        .map(() => new Array(boardSize).fill("black")),
     };
   }
 
@@ -40,15 +42,18 @@ class Board extends Component {
       for (let i = 0; i < 5; i++) {
         newColorArray[winArray[i].row][winArray[i].col] = "darkkhaki";
       }
+      this.gameModal.current.show();
     }
 
-    const winner = algorithm.getWinner();
+    const newXIsNext =
+      algorithm.getWinner() === null ? !this.state.xIsNext : this.state.xIsNext;
+
+    gameTurn.setIsXNext(newXIsNext);
 
     this.setState({
       valueArray: newValueArray,
       colorArray: newColorArray,
-      isModalOpen: winner === null ? false : true,
-      xIsNext: winner === null ? !this.state.xIsNext : this.state.xIsNext,
+      xIsNext: newXIsNext,
     });
   };
 
@@ -68,6 +73,7 @@ class Board extends Component {
       .fill(null)
       .map((row) => new Array(boardSize).fill(""));
 
+    board.push(<br />);
     for (let row = 0; row < boardSize; row++) {
       for (let col = 0; col < boardSize; col++) {
         array2D[row][col] = this.renderElement(row, col);
@@ -78,73 +84,13 @@ class Board extends Component {
     return board;
   };
 
-  renderModalDialog = () => {
-    return (
-      <Modal
-        isOpen={this.state.isModalOpen}
-        onAfterOpen={this.afterOpenModal}
-        onRequestClose={this.closeModal}
-        className="modal-content"
-        overlayClassName="modal-overlay"
-        contentLabel="winner-modal-dialog"
-      >
-        <div>
-          The winner is: &nbsp;
-          <span
-            style={{
-              fontSize: 30,
-              fontWeight: "bold",
-              color: algorithm.getWinner() === "X" ? "dodgerblue" : "red",
-            }}
-          >
-            {algorithm.getWinner()}
-          </span>
-        </div>
-        <br />
-
-        <button onClick={this.closeModal}>Close</button>
-      </Modal>
-    );
-  };
-
-  renderGameTurn = () => {
-    return (
-      <div className="game-turn">
-        <span
-          style={{
-            fontSize: 40,
-            fontWeight: "bold",
-            color: this.state.xIsNext === true ? "dodgerblue" : "red",
-          }}
-        >
-          {this.state.xIsNext === true ? "X" : "O"}
-        </span>
-        <span
-          style={{
-            fontSize: 30,
-            color: "white",
-          }}
-        >
-          &nbsp;turn
-        </span>
-      </div>
-    );
-  };
-
-  afterOpenModal = () => {};
-
-  closeModal = () => {
-    this.setState({
-      isModalOpen: false,
-    });
-  };
-
   render() {
     return (
       <div className={this.props.className}>
-        {this.renderGameTurn()}
+        <GameTurn />
         {this.renderBoard()}
-        {this.renderModalDialog()}
+        <GameInfo />
+        <GameModal ref={this.gameModal} />
       </div>
     );
   }

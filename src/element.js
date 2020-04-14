@@ -1,28 +1,21 @@
-import React, { Component } from "react";
+import React from "react";
 import "./element.css";
 
-class Element extends Component {
-  renderSquare = () => {
-    return (
-      <button
-        className="square"
-        onClick={() => {
-          this.props.onClick();
-        }}
-        style={{
-          float: "center",
-          color: this.props.value === "X" ? "dodgerblue" : "red",
-          backgroundColor: this.props.background,
-        }}
-      >
-        {this.props.value}
-      </button>
-    );
-  };
-
-  render() {
-    return this.renderSquare();
-  }
-}
+// stateless component is define as constant
+// instead of a class which extends React.Component
+const Element = (props) => {
+  return (
+    <button
+      className="square"
+      onClick={props.onClick}
+      style={{
+        color: props.value === "X" ? "dodgerblue" : "red",
+        backgroundColor: props.background,
+      }}
+    >
+      {props.value}
+    </button>
+  );
+};
 
 export default Element;

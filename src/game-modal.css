@@ -17,3 +17,15 @@
   text-align: center;
   background-color: silver;
 }
+
+span.x-large {
+  font-size: 40px;
+  font-weight: bold;
+  color: dodgerblue;
+}
+
+span.o-large {
+  font-size: 40px;
+  font-weight: bold;
+  color: red;
+}
