@@ -14,7 +14,7 @@ const GameInfo = () => {
         <br />
         Author: Huynh Thanh Binh - Email: 1653006@student.hcmus.edu.vn 
         <br />
-        Techniques: react stateful component & react time travel
+        Techniques: react stateful vs. stateless component & react time travel
       </p>
     </div>
   );

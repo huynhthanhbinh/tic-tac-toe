@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import Element from "./element";
-import GameInfo from "./game-info";
-import GameTurn from "./game-turn";
-import GameModal from "./game-modal";
 
-import * as gameTurn from "./game-turn";
+import * as gameTurn from "./game-status";
 import * as algorithm from "./algorithm";
+
+import "./game-board.css";
 
 const boardSize = algorithm.boardSize;
 const winArray = algorithm.winArray;
 
-class Board extends Component {
+class GameBoard extends Component {
   constructor(props) {
     super(props);
-    this.gameModal = React.createRef();
+    this.onWin = this.props.onWin;
+    this.setIsXNext = this.props.setIsXNext;
 
     this.state = {
       xIsNext: true,
@@ -42,13 +42,13 @@ class Board extends Component {
       for (let i = 0; i < 5; i++) {
         newColorArray[winArray[i].row][winArray[i].col] = "darkkhaki";
       }
-      this.gameModal.current.show();
+      this.onWin();
     }
 
     const newXIsNext =
       algorithm.getWinner() === null ? !this.state.xIsNext : this.state.xIsNext;
 
-    gameTurn.setIsXNext(newXIsNext);
+    this.setIsXNext(newXIsNext);
 
     this.setState({
       valueArray: newValueArray,
@@ -73,7 +73,6 @@ class Board extends Component {
       .fill(null)
       .map((row) => new Array(boardSize).fill(""));
 
-    board.push(<br />);
     for (let row = 0; row < boardSize; row++) {
       for (let col = 0; col < boardSize; col++) {
         array2D[row][col] = this.renderElement(row, col);
@@ -86,14 +85,11 @@ class Board extends Component {
 
   render() {
     return (
-      <div className={this.props.className}>
-        <GameTurn />
+      <div className="game-board">
         {this.renderBoard()}
-        <GameInfo />
-        <GameModal ref={this.gameModal} />
       </div>
     );
   }
 }
 
-export default Board;
+export default GameBoard;
