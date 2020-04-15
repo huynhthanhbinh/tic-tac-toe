@@ -32,7 +32,30 @@ button {
   border: solid 1px dimgray;
 }
 
-button.highlight {
+/* remove blue outline */
+button:focus {
+  outline: 0;
+}
+
+button.highlight,
+.stepList button:hover {
   background-color: gray;
   color: black;
+}
+
+.btnReverse {
+  margin-left: 30px;
+  height: 40px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: gray;
+  color: black;
+}
+
+.btnReverse:hover {
+  color: white;
+  border: solid 1px dodgerblue;
+  background-color: dodgerblue;
 }

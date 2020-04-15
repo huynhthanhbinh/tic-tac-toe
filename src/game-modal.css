@@ -29,3 +29,16 @@ span.o-large {
   font-weight: bold;
   color: red;
 }
+
+.modal-content button {
+  height: 25px;
+  color: silver;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: firebrick;
+  text-align: center;
+}
+
+.modal-content button:hover {
+  cursor: pointer;
+}
