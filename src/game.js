@@ -7,7 +7,6 @@ import * as algorithm from "./algorithm";
 import "./game.css";
 
 const boardSize = algorithm.boardSize;
-let winStep = -1; // step has winner
 
 class Game extends Component {
   constructor(props) {
@@ -18,26 +17,20 @@ class Game extends Component {
     this.state = {
       stepNumber: 0,
       isHistorySortAsc: true,
+      historicWinArray: [false],
       historicValueArray: [emptyValueArray],
       historicColorArray: [emptyColorArray],
     };
   }
 
-  jumpTo(step) {
+  goTo(step) {
     this.setState({
       stepNumber: step,
     });
   }
 
   render = () => {
-    const renderMoveList = this.state.historicValueArray.map((valueArray, step) => {
-      const label = step ? "Go to step #" + step : "Go to game start";
-      return (
-        <li key={step}>
-          <button onClick={() => this.jumpTo(step)}>{label}</button>
-        </li>
-      );
-    });
+    const isWinStep = this.state.historicWinArray[this.state.stepNumber];
 
     return (
       <div className="game">
@@ -46,14 +39,14 @@ class Game extends Component {
           <GameBoard
             onClickElement={(row, col) => this.onClickElement(row, col)}
             valueArray={this.state.historicValueArray[this.state.stepNumber]}
-            colorArray={this.state.historicColorArray[this.state.stepNumber === winStep ? 1 : 0]}
+            colorArray={this.state.historicColorArray[isWinStep ? 1 : 0]}
           />
           <GameInfo />
           <GameModal ref={this.gameModal} />
         </div>
-        <div class="game-vr"></div>
+        <div className="game-vr"></div>
         <div className="game-sub">
-          <ol>{renderMoveList}</ol>
+          <ol>{this.renderMoveList()}</ol>
         </div>
       </div>
     );
@@ -66,9 +59,26 @@ class Game extends Component {
 
     nextValueArray[row][col] = xIsNext ? "X" : "O";
 
+    const isWin = false;
+
     this.setState({
+      historicWinArray: this.state.historicWinArray.concat(isWin),
       historicValueArray: historicValueArray.concat([nextValueArray]),
       stepNumber: historicValueArray.length,
+    });
+  };
+
+  renderMoveList = () => {
+    const stepNumber = this.state.stepNumber;
+    return this.state.historicValueArray.map((valueArray, step) => {
+      const buttonLabel = step ? "Go to step #" + step : "Go to game start";
+      return (
+        <li id={step} key={step}>
+          <button className={step === stepNumber ? "highlight" : "non-highlight"} onClick={() => this.goTo(step)}>
+            {buttonLabel}
+          </button>
+        </li>
+      );
     });
   };
 }

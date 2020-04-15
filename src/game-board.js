@@ -21,16 +21,18 @@ const GameBoard = (props) => {
 
 const renderBoard = () => {
   const board = [];
-  let array2D = new Array(boardSize)
-    .fill()
-    .map(() => new Array(boardSize).fill(""));
+  let array2D = new Array(boardSize).fill().map(() => new Array(boardSize).fill(""));
 
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       array2D[row][col] = renderElement(row, col);
     }
 
-    board.push(<div className="board-row">{array2D[row]}</div>);
+    board.push(
+      <div className="board-row" key={"board-row-" + row}>
+        {array2D[row]}
+      </div>
+    );
   }
   return board;
 };
@@ -38,6 +40,7 @@ const renderBoard = () => {
 const renderElement = (row, col) => {
   return (
     <Element
+      key={row * boardSize + col}
       value={valueArray[row][col]}
       background={colorArray[row][col]}
       onClick={() => onClickSquare(row, col)}
