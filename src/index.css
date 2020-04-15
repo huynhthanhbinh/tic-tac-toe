@@ -2,6 +2,8 @@ body {
   font: 20px "Century Gothic", Futura, sans-serif;
   margin: 20px;
   background-color: black;
+  min-width: 700px;
+  min-height: 880px;
 }
 
 ol,

@@ -1,0 +1,9 @@
+{
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "[yaml]": {
+    
+    },
+    "prettier.jsxBracketSameLine": true,
+    "prettier.printWidth": 128
+}
